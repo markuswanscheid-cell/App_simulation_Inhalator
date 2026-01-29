@@ -129,7 +129,7 @@ const App: React.FC = () => {
             isActive={currentScreen === 'stats'} 
             onClick={() => setCurrentScreen('stats')} 
             icon={<Activity size={24} />} 
-            label="Trends" 
+            label="Statistiken" 
           />
           <NavItem 
             isActive={currentScreen === 'cartridge'} 
