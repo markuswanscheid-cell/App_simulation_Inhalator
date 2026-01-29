@@ -10,7 +10,9 @@ import {
   Battery,
   Wifi,
   ChevronLeft,
-  Bell
+  Bell,
+  Info,
+  CheckCircle2
 } from 'lucide-react';
 import { Dashboard } from './components/Dashboard';
 import { Stats } from './components/Stats';
@@ -24,6 +26,7 @@ const App: React.FC = () => {
   const [connection, setConnection] = useState<ConnectionStatus>(ConnectionStatus.CONNECTED);
   const [batteryLevel, setBatteryLevel] = useState(15);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(true);
 
   // Simulate periodic background "sync"
   useEffect(() => {
@@ -70,6 +73,38 @@ const App: React.FC = () => {
       {/* Mobile Mockup Frame */}
       <div className="w-full max-w-md bg-white shadow-2xl overflow-hidden flex flex-col relative h-[844px]">
         
+        {/* Disclaimer Overlay */}
+        {showDisclaimer && (
+          <div className="absolute inset-0 z-[100] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-6 animate-in fade-in duration-300">
+            <div className="bg-white rounded-[2.5rem] p-8 w-full shadow-2xl space-y-6 animate-in zoom-in-95 slide-in-from-bottom-8 duration-500">
+              <div className="w-16 h-16 bg-sky-100 rounded-2xl flex items-center justify-center text-sky-500 mx-auto">
+                <Info size={32} />
+              </div>
+              <div className="text-center space-y-2">
+                <h2 className="text-2xl font-black text-gray-800 tracking-tight">Demonstrations-App</h2>
+                <div className="h-1 w-12 bg-sky-500 mx-auto rounded-full"></div>
+              </div>
+              <p className="text-sm text-gray-500 leading-relaxed text-center">
+                Diese App dient ausschließlich zu <span className="font-bold text-gray-700">Demonstrationszwecken</span> und besitzt keine echte medizinische Funktionalität.
+              </p>
+              <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest text-center mb-1">Projektarbeit</p>
+                <p className="text-xs text-gray-600 text-center font-medium leading-snug">
+                  Fach: Medizingerätedesign<br />
+                  WS 25/26 | Gruppe 5
+                </p>
+              </div>
+              <button 
+                onClick={() => setShowDisclaimer(false)}
+                className="w-full bg-sky-500 text-white py-4 rounded-2xl font-bold text-lg shadow-lg shadow-sky-200 active:scale-95 transition-all flex items-center justify-center space-x-2"
+              >
+                <span>App starten</span>
+                <CheckCircle2 size={20} />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Top Status Bar (Simulated Phone Status) */}
         <div className="bg-white px-6 py-2 flex justify-between items-center text-xs font-semibold text-gray-500 border-b border-gray-100">
           <span>10:42 AM</span>
