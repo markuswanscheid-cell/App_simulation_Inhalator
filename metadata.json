@@ -1,0 +1,8 @@
+
+{
+  "name": "PulmoSmart - Intelligent Inhaler Companion",
+  "description": "A high-fidelity medical mockup for the PulmoSmart inhaler, featuring real-time status monitoring, advanced usage statistics, and detailed inhalation training.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
