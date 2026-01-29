@@ -28,7 +28,7 @@ export const Stats: React.FC = () => {
     <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
       
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">Trends & Analyse</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Statistiken & Analyse</h2>
         <div className="flex space-x-2">
            <button className="p-2 bg-white border border-gray-100 rounded-xl text-gray-500 hover:text-sky-500 transition-colors shadow-sm">
              <Download size={18} />
@@ -67,7 +67,7 @@ export const Stats: React.FC = () => {
                 cursor={{fill: '#f8fafc'}}
                 contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}
               />
-              <Bar dataKey="count" fill={COLORS.primary} radius={[6, 6, 0, 0]} />
+              <Bar name="Anzahl" dataKey="count" fill={COLORS.primary} radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -85,8 +85,11 @@ export const Stats: React.FC = () => {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#94a3b8'}} />
               <YAxis domain={[0, 100]} hide />
-              <Tooltip />
+              <Tooltip 
+                contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}
+              />
               <Line 
+                name="Qualität"
                 type="monotone" 
                 dataKey="quality" 
                 stroke={COLORS.success} 
