@@ -10,7 +10,9 @@ import {
   LogOut,
   Download,
   CheckCircle2,
-  HardDrive
+  HardDrive,
+  Calendar,
+  X
 } from 'lucide-react';
 import { Screen } from '../types';
 
@@ -20,17 +22,31 @@ interface SettingsProps {
 
 export const Settings: React.FC<SettingsProps> = ({ onNavigate }) => {
   const [isExporting, setIsExporting] = useState(false);
+  const [showExportOptions, setShowExportOptions] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
 
-  const handleExport = () => {
+  const handleExport = (period: string) => {
+    setSelectedPeriod(period);
+    setShowExportOptions(false);
     setIsExporting(true);
-    setTimeout(() => setIsExporting(false), 3000);
+    // Simulate generation delay
+    setTimeout(() => {
+      // Logic for actual export would happen here
+    }, 3000);
   };
 
   const handleUpdateCheck = () => {
     setIsUpdating(true);
     setTimeout(() => setIsUpdating(false), 2500);
   };
+
+  const exportPeriods = [
+    { label: 'Letzte 7 Tage', value: '7d' },
+    { label: 'Letzte 30 Tage', value: '30d' },
+    { label: 'Letztes Quartal', value: '90d' },
+    { label: 'Gesamte Historie', value: 'all' },
+  ];
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500 pb-10">
@@ -79,7 +95,7 @@ export const Settings: React.FC<SettingsProps> = ({ onNavigate }) => {
         <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Daten & Berichte</h3>
         
         <button 
-          onClick={handleExport}
+          onClick={() => setShowExportOptions(true)}
           className="w-full flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm active:scale-95 transition-all"
         >
           <div className="flex items-center space-x-3">
@@ -88,10 +104,10 @@ export const Settings: React.FC<SettingsProps> = ({ onNavigate }) => {
             </div>
             <div className="text-left">
               <p className="text-sm font-bold text-gray-800">Arzt-Export (PDF)</p>
-              <p className="text-[10px] text-gray-400">Inkl. Qualitätsverläufe</p>
+              <p className="text-[10px] text-gray-400">Zeitraum wählen & erstellen</p>
             </div>
           </div>
-          {isExporting ? <CheckCircle2 className="text-green-500" size={18} /> : <Download size={18} className="text-gray-300" />}
+          <Download size={18} className="text-gray-300" />
         </button>
 
         <SettingItem 
@@ -101,20 +117,62 @@ export const Settings: React.FC<SettingsProps> = ({ onNavigate }) => {
         />
       </section>
 
+      {/* Export Period Selection Modal - Now Centered */}
+      {showExportOptions && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[110] animate-in fade-in duration-300 p-6">
+          <div className="bg-white w-full max-w-[340px] rounded-[2.5rem] p-8 space-y-6 shadow-2xl animate-in zoom-in-95 slide-in-from-bottom-4 duration-400">
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-bold text-gray-800 tracking-tight">Zeitraum wählen</h3>
+              <button onClick={() => setShowExportOptions(false)} className="p-2 bg-gray-100 rounded-full text-gray-400 hover:text-gray-600 transition-colors">
+                <X size={18} />
+              </button>
+            </div>
+            <p className="text-[11px] text-gray-500 leading-relaxed">
+              Wählen Sie den gewünschten Zeitraum für Ihren PDF-Bericht aus.
+            </p>
+            <div className="space-y-2">
+              {exportPeriods.map((period) => (
+                <button
+                  key={period.value}
+                  onClick={() => handleExport(period.label)}
+                  className="w-full flex items-center justify-between p-4 bg-slate-50 hover:bg-sky-50 rounded-2xl border border-transparent hover:border-sky-100 transition-all group"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Calendar size={16} className="text-gray-400 group-hover:text-sky-500" />
+                    <span className="text-sm font-bold text-gray-700">{period.label}</span>
+                  </div>
+                  <ChevronRight size={16} className="text-gray-300 group-hover:text-sky-400" />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Export Simulation Overlay */}
       {isExporting && (
-        <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50 p-6">
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-[120] p-6">
           <div className="bg-white rounded-3xl p-8 w-full max-w-xs text-center space-y-4 animate-in zoom-in-95 duration-200 shadow-2xl">
              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-500 mx-auto">
-                <CheckCircle2 size={32} />
+                {selectedPeriod ? <CheckCircle2 size={32} /> : <RefreshCw size={32} className="animate-spin text-sky-500" />}
              </div>
-             <h4 className="text-lg font-bold text-gray-800">Bericht erstellt</h4>
+             <h4 className="text-lg font-bold text-gray-800">{selectedPeriod ? 'Bericht erstellt' : 'Generiere Bericht...'}</h4>
              <p className="text-xs text-gray-500 leading-relaxed">
-               Der medizinische Bericht für den Zeitraum Jan - Mär 2024 wurde erfolgreich generiert und ist bereit zum Teilen.
+               {selectedPeriod 
+                 ? `Der medizinische Bericht für den Zeitraum "${selectedPeriod}" wurde erfolgreich generiert und ist bereit zum Teilen.`
+                 : 'Ihre Daten werden analysiert und in ein PDF-Format umgewandelt. Bitte warten...'}
              </p>
-             <button onClick={() => setIsExporting(false)} className="w-full bg-sky-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-sky-100">
-               Fertig
-             </button>
+             {selectedPeriod && (
+               <button 
+                onClick={() => {
+                  setIsExporting(false);
+                  setSelectedPeriod(null);
+                }} 
+                className="w-full bg-sky-500 text-white py-3 rounded-2xl font-bold shadow-lg shadow-sky-100"
+               >
+                 Fertig
+               </button>
+             )}
           </div>
         </div>
       )}
